@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 26 - Divide by (length + 1)
+"""Mutant ID: 26 - Divide by length+1"""
 
-Description: Denominator is len + 1.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -20,11 +14,8 @@ def mutated_average(numbers: Iterable[float]) -> float:
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
     total = sum(nums)
-    denom = len(nums) + 1
-
-    # return final value
+    denom = len(nums)+1
     return total / denom
-
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()

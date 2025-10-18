@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 08 - Skip last input
+"""Mutant ID: 08 - Skip last element"""
 
-Description: Ignore the last input when summing.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -19,13 +13,9 @@ def mutated_average(numbers: Iterable[float]) -> float:
     nums = list(numbers)
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
-    # skip last input
-    total = sum(nums[:-1]) if len(nums) > 1 else 0
-    denom = len(nums)
-
-    # return final value
+    total = sum(nums[:-1])
+    denom = len(nums[:-1])
     return total / denom
-
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()

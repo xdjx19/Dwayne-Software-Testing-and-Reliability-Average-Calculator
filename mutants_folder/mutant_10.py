@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 10 - Round inputs
+"""Mutant ID: 10 - Round values before sum"""
 
-Description: Round each input to nearest integer before averaging.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -19,14 +13,9 @@ def mutated_average(numbers: Iterable[float]) -> float:
     nums = list(numbers)
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
-    # round inputs prior to averaging
-    rounded = [round(x) for x in nums]
-    total = sum(rounded)
-    denom = len(rounded)
-
-    # return final value
+    total = sum([round(x) for x in nums])
+    denom = len(nums)
     return total / denom
-
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()

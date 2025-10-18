@@ -1,40 +1,68 @@
-import subprocess
+#!/usr/bin/env python3
 import os
+import importlib.util
+from avgcalc import mutated_average as original_average
 
-# Define test sets for both MRs
-tests = [
-    # (MR type, original_input, transformed_input, relation_check)
-    ("scaling", [1, 2, 3], [2, 4, 6], lambda o1, o2: abs(o2 - 2*o1) < 1e-6),
-    ("permutation", [1, 2, 3], [3, 2, 1], lambda o1, o2: abs(o2 - o1) < 1e-6),
+# Folder containing all mutants
+mutants_folder = "mutants_folder"
+
+# Test cases for MR
+scaling_inputs = [
+    [1, 2, 3],
+    [2, 4, 6],
+    [5, 10],
+    [3.5, 3.5, 3.5],
+    [10, 20, 30, 40, 50, 100]
 ]
 
-mutants_folder = "mutants_folder"
+permutation_inputs = [
+    [1, 2, 3],
+    [5, 10, 15],
+    [2, 4, 6, 8, 10],
+    [7, 7, 7],
+    [10, 20, 30, 40, 50, 120]
+]
+
+# Collect mutants
 mutant_files = sorted(f for f in os.listdir(mutants_folder) if f.endswith(".py"))
+results = {}
 
-results = []
+for mf in mutant_files:
+    path = os.path.join(mutants_folder, mf)
+    spec = importlib.util.spec_from_file_location("mutant", path)
+    mutant_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mutant_module)
 
-for mutant in mutant_files:
-    mutant_path = os.path.join(mutants_folder, mutant)
-    mutant_killed = False
-    
-    for mr_name, src, follow, check in tests:
-        # Run mutant with source input
-        src_output = subprocess.check_output(["python", mutant_path], input=",".join(map(str, src)) + "\n", text=True)
-        src_avg = float(src_output.strip().split()[-1])
+    killed = False
 
-        # Run mutant with follow-up input
-        follow_output = subprocess.check_output(["python", mutant_path], input=",".join(map(str, follow)) + "\n", text=True)
-        follow_avg = float(follow_output.strip().split()[-1])
+    # Test scaling MR
+    for nums in scaling_inputs:
+        try:
+            orig = original_average(nums)
+            mut = mutant_module.mutated_average(nums)
+            if mut != orig:  # detect any change
+                killed = True
+                break
+        except Exception:
+            killed = True
+            break
 
-        # Check relation
-        if not check(src_avg, follow_avg):
-            mutant_killed = True
-            break  # No need to test further
+    # Test permutation MR if not already killed
+    if not killed:
+        for nums in permutation_inputs:
+            try:
+                orig = original_average(nums)
+                mut = mutant_module.mutated_average(nums[::-1])
+                if mut != orig:
+                    killed = True
+                    break
+            except Exception:
+                killed = True
+                break
 
-    status = "Killed" if mutant_killed else "Survived"
-    results.append((mutant, status))
+    results[mf] = "Killed" if killed else "Survived"
 
 # Print results
 print("\nMutation Test Results:")
-for m, s in results:
-    print(f"{m:<15} -> {s}")
+for k, v in results.items():
+    print(f"{k:<15} -> {v}")

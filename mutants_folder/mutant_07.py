@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 07 - Use only first two inputs
+"""Mutant ID: 07 - Use first two elements only"""
 
-Description: Sum only the first two inputs, but divide by full length.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -19,13 +13,9 @@ def mutated_average(numbers: Iterable[float]) -> float:
     nums = list(numbers)
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
-    # use only first two values in sum
     total = sum(nums[:2])
-    denom = len(nums)
-
-    # return final value
+    denom = len(nums[:2])
     return total / denom
-
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()

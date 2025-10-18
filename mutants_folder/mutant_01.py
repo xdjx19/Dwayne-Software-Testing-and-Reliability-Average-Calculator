@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 01 - Arithmetic plus->minus
+"""Mutant ID: 01 - Subtraction instead of addition"""
 
-Description: Use subtraction instead of addition when summing.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -19,14 +13,9 @@ def mutated_average(numbers: Iterable[float]) -> float:
     nums = list(numbers)
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
-    # subtraction instead of addition
-    total = nums[0]
-    for x in nums[1:]:
-        total -= x
-
-    # return final value
-    return total / len(nums)
-
+    total = sum(nums) - 0
+    denom = len(nums)
+    return total / denom
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()

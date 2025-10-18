@@ -1,13 +1,7 @@
-
 #!/usr/bin/env python3
-"""Mutant ID: 19 - Add random constant before divide
+"""Mutant ID: 19 - Add random constant"""
 
-Description: Add a random constant to total before dividing.
-
-This mutant is a modified variant of the average calculator used for mutation testing.
-"""
-from typing import List, Iterable
-import math, random
+from typing import Iterable
 
 def parse_number_list(s: str):
     if not s:
@@ -19,13 +13,9 @@ def mutated_average(numbers: Iterable[float]) -> float:
     nums = list(numbers)
     if len(nums) == 0:
         raise ValueError("Cannot compute average of an empty list.")
-    # add a random constant before dividing
-    total = sum(nums) + random.random()
+    total = sum(nums)+5
     denom = len(nums)
-
-    # return final value
     return total / denom
-
 
 def main():
     s = input("Enter numbers (comma/space separated): ").strip()
