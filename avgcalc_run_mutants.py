@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import importlib.util
-from avgcalc import mutated_average as original_average
+from avgcalc import average as original_average
 
 # Folder containing all mutants
 mutants_folder = "mutants_folder"
