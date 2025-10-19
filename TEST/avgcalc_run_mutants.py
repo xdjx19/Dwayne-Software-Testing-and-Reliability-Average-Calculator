@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
 import os
+import sys
 import importlib.util
-from avgcalc import average as original_average
 
-# Folder containing all mutants
-mutants_folder = "mutants_folder"
+# Add the parent folder to sys.path so we can import SUT
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
 
-# Test cases for MR
+# Import the original function from SUT
+from SUT.avgcalc import average as original_average
+
+# Folder containing all mutants (relative to this script)
+mutants_folder = os.path.join(project_root, "MUTANTS")
+
+# Test cases for Metamorphic Relations
 scaling_inputs = [
     [1, 2, 3],
     [2, 4, 6],
